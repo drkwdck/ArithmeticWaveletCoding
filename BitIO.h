@@ -50,13 +50,13 @@ public:
     inline BitIn& operator>>(char &c) { c = input_bit(); return *this; }
     operator void *() {
 	if (bitsInBuf) return this;
-	if (input.get(&bitBuf)) {
+	if (input.get(bitBuf)) {
 	    bitsInBuf = 8;
 	}
 	return &input;
     }
 private:
-    unsigned char bitBuf;
+    char bitBuf;
     int bitsInBuf;
     int bitCount;
     std::istream &input;    

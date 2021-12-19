@@ -338,6 +338,12 @@ Real Image::compare_mse (const Image *im2)
 // Resize an image -- crop original image or pad with 0's to make fit
 //   new boundaries
 
+int min(int a, int b)
+{
+
+  return a > b ? b : a;
+}
+
 void Image::resize (int new_hsize, int new_vsize)
 {
   Real *new_value = new Real [new_hsize*new_vsize];
@@ -356,5 +362,7 @@ void Image::resize (int new_hsize, int new_vsize)
     delete [] value;
   value = new_value;
 }
+
+
 
 /*---------------------------------------------------------------------------*/

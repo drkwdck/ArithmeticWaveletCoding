@@ -31,7 +31,7 @@ Wavelet::Wavelet (FilterSet *filterset)
   symmetric = filterset->symmetric;
 
   // amount of space to leave for padding vectors for symmetric extensions
-  npad = max(analysisLow->size, analysisHigh->size);
+  npad = analysisLow->size > analysisHigh->size ? analysisLow->size : analysisHigh->size;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -172,8 +172,8 @@ void Wavelet::transform2d (Real *input, Real *output, int hsize, int vsize,
    if (sym_ext == -1)
      sym_ext = symmetric;
 
-   Real *temp_in = new Real [2*npad+max(hsize,vsize)];
-   Real *temp_out = new Real [2*npad+max(hsize,vsize)];
+   Real *temp_in = new Real [2*npad+(hsize > vsize ? hsize : vsize)];
+   Real *temp_out = new Real [2*npad+(hsize > vsize ? hsize : vsize)];
 
    copy (input, output, hsize*vsize);
 
@@ -220,7 +220,6 @@ void Wavelet::transform2d (Real *input, Real *output, int hsize, int vsize,
 }
 
 /*---------------------------------------------------------------------------*/
-
 void Wavelet::invert2d (Real *input, Real *output, int hsize, int vsize,
 			 int nsteps, int sym_ext)
 {
@@ -249,8 +248,8 @@ void Wavelet::invert2d (Real *input, Real *output, int hsize, int vsize,
      vHighSize[i] = vLowSize[i-1]/2;
    }
 
-   Real *temp_in = new Real [2*npad+max(hsize,vsize)];
-   Real *temp_out = new Real [2*npad+max(hsize,vsize)];
+   Real *temp_in = new Real [2*npad+ (hsize > vsize ? hsize : vsize)];
+   Real *temp_out = new Real [2*npad+(hsize > vsize ? hsize : vsize)];
 
    copy (input, output, hsize*vsize);
 
@@ -467,7 +466,7 @@ void Wavelet::symmetric_extension (Real *output, int size, int left_ext, int
     output[++last] = symmetry*output[originalLast];
 
   // extend left end
-  int nextend = min (originalSize-2, first);
+  int nextend = originalSize-2 <  first ? originalSize-2 :first;
   for (i = 0; i < nextend; i++) {
     output[--first] = symmetry*output[originalFirst+1+i];
   }
@@ -479,7 +478,7 @@ void Wavelet::symmetric_extension (Real *output, int size, int left_ext, int
   }
 
   // extend right end
-  nextend = min (originalSize-2, 2*npad+size-1 - last);
+  nextend = originalSize-2 <  2*npad+size-1 - last ? originalSize-2 : 2*npad+size-1 - last;
   for (i = 0; i < nextend; i++) {
     output[++last] = symmetry*output[originalLast-1-i];
   }

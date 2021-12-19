@@ -96,29 +96,29 @@ void iHistogram::swapSyms(int pos_a, int pos_b)
 int iHistogram::sorted(int from, int to)
 {
     iHistDBbegin(this);
-    cerr << "sorted(" << from << ", " << to << ")->";
+    std::cerr << "sorted(" << from << ", " << to << ")->";
     iHistDBend;
     for (int i = from; i < to - 1; i++) {
 	if (count[i] < count[i + 1]) {
 	    iHistDBbegin(this);
-	    cerr << 0 << "\n";
+	    std::cerr << 0 << "\n";
 	    iHistDBend;
 	    return 0;
 	}
     }
     iHistDBbegin(this);
-    cerr << 1 << "\n";
+    std::cerr << 1 << "\n";
     iHistDBend;
     return 1;
 }
 
 void iHistogram::pc(int from, int to)
 {
-    cerr << "<" << from << ", " << to << ">";
+    std::cerr << "<" << from << ", " << to << ">";
     for (int i = from; i < to; i++) {
-	cerr << setw(4) << count[i];
+	std::cerr << std::setw(4) << count[i];
     }
-    cerr << "\n";
+    std::cerr << "\n";
 }
 
 void iHistogram::qs(int from, int to)
@@ -127,8 +127,8 @@ void iHistogram::qs(int from, int to)
     int ub = to;
     
     iHistDBbegin(this);
-    cerr << "qs(" << from << ", " << to << ")\n";
-    cerr << "pivoting on " << count[pivot] << "\n";
+    std::cerr << "qs(" << from << ", " << to << ")\n";
+    std::cerr << "pivoting on " << count[pivot] << "\n";
     pc(from, to);
     iHistDBend;
     
@@ -140,13 +140,13 @@ void iHistogram::qs(int from, int to)
 	if (count[pivot + 1] < count[pivot]) {
 	    ub--;
 	    iHistDBbegin(this);
-	    cerr << "swapping count[" << pivot + 1 << "]=" << count[pivot + 1] <<
+	    std::cerr << "swapping count[" << pivot + 1 << "]=" << count[pivot + 1] <<
 		" and count[" << ub << "]=" << count[ub] << "\n";
 	    iHistDBend;
 	    swapSyms(pivot + 1, ub);
 	} else {
 	    iHistDBbegin(this);
-	    cerr << "swapping count[" << pivot + 1 << "]=" << count[pivot + 1] <<
+	    std::cerr << "swapping count[" << pivot + 1 << "]=" << count[pivot + 1] <<
 		" and count[" << pivot << "]=" << count[pivot] << "\n";
 	    iHistDBend;
 	    swapSyms(pivot, pivot + 1);	
@@ -295,7 +295,7 @@ void iHistogram::Reorganise(int sym)
 void iHistogram::IncCount(int sym)
 {
     iHistDBbegin(this) {
-	cerr << "IncCount(" << sym << ")\n";
+	std::cerr << "IncCount(" << sym << ")\n";
     } iHistDBend;
     
     assert((sym >= 0) && (sym < nsyms));
@@ -327,7 +327,7 @@ int iHistogram::Symbol(int val)
     assert(val >= 0 && val < totalCount);
 
     iHistDBbegin(this) {
-	cerr << "Symbol(" << val << ")\n";
+	std::cerr << "Symbol(" << val << ")\n";
     } iHistDBend;
 
     int pos = 0;    
@@ -335,9 +335,9 @@ int iHistogram::Symbol(int val)
     
     while(1) {
 	iHistDBbegin(this) {
-	    cerr << "Symbol: pos= " << pos << " leftSum= " << leftSum << " ";
-	    cerr << "treeCount[" << pos << "]=" << treeCount[pos] << " ";
-	    cerr << "count[" << pos << "]=" << count[pos] << "\n";
+	    std::cerr << "Symbol: pos= " << pos << " leftSum= " << leftSum << " ";
+	    std::cerr << "treeCount[" << pos << "]=" << treeCount[pos] << " ";
+	    std::cerr << "count[" << pos << "]=" << count[pos] << "\n";
 	} iHistDBend;
 
 	if (leftSum + treeCount[pos] > val) {
@@ -352,7 +352,7 @@ int iHistogram::Symbol(int val)
 		assert(val >= leftSum &&
 		       val < leftSum + treeCount[pos] + count[pos]);
 		iHistDBbegin(this) {
-		    cerr << "Symbol: posToSym[" << pos << "]=" << posToSym[pos]
+		    std::cerr << "Symbol: posToSym[" << pos << "]=" << posToSym[pos]
 			 << "\n";
 		} iHistDBend;
 		return posToSym[pos];
@@ -374,16 +374,16 @@ void iHistogram::print(std::ostream &strm)
 
     int i;
     strm << "symToPos  ";
-    for (i = 0; i < nsyms; i++) { strm << setw(6) << symToPos[i] << " "; }
+    for (i = 0; i < nsyms; i++) { strm << std::setw(6) << symToPos[i] << " "; }
     strm << "\n";
     strm << "count     ";
-    for (i = 0; i < nsyms; i++) { strm << setw(6) << count[i] << " "; }
+    for (i = 0; i < nsyms; i++) { strm << std::setw(6) << count[i] << " "; }
     strm << "\n";
     strm << "treeCount ";
-    for (i = 0; i < nsyms; i++) { strm << setw(6) << treeCount[i] << " "; }
+    for (i = 0; i < nsyms; i++) { strm << std::setw(6) << treeCount[i] << " "; }
     strm << "\n";
     strm << "posToSym  ";
-    for (i = 0; i < nsyms; i++) { strm << setw(6) << posToSym[i] << " "; }
+    for (i = 0; i < nsyms; i++) { strm << std::setw(6) << posToSym[i] << " "; }
     strm << "\n";
 }
 
